@@ -1,20 +1,20 @@
 import { Vector } from '../path';
-import { Panel, CopyPanel } from '../panel';
+import { Panel } from '../panel';
 import { Grid } from '../grid';
 
 export type PanelPlacement = {
-  panel: Panel | CopyPanel;
-  highlight: Vector; // パネル内座標
-  point: Vector;     // 盤面座標
+  panel: Panel;
+  highlight: Vector;
+  point: Vector;
 };
 
 export interface PhaseGrids {
-  before: Grid;  // パネル配置前のグリッド
-  after: Grid;   // パネル配置後のグリッド
+  before: Grid;
+  after: Grid;
 }
 
 export interface PhasedSolution {
   phases: PanelPlacement[][];
-  phaseHistory: Grid[];           // 既存（配置前のみ）
-  phaseGrids: PhaseGrids[];      // 新規（配置前後両方）
+  phaseHistory: Grid[];
+  phaseGrids: PhaseGrids[];
 }

@@ -1,7 +1,6 @@
 import { Grid } from "../grid";
-import { Panel, CopyPanel } from "../panel";
-import { GridCellKey } from "@/types/grid";
-import { PanelCellTypeKey } from "@/types/panel";
+import { Panel } from "../panel";
+import { CellKey, Cell } from "@/types/cell";
 import { NumberGrid } from "@/types/solution";
 import { PanelPlacement } from "@/types/panel-placement";
 
@@ -12,7 +11,7 @@ export interface GridState {
 }
 
 export interface CellTypeState {
-  selectedCellType: GridCellKey;
+  selectedCellType: CellKey;
 }
 
 export interface PanelListState {
@@ -20,14 +19,8 @@ export interface PanelListState {
   removedPanels: { panel: Panel; index: number }[];
 }
 
-export interface CopyPanelListState {
-  copyPanels: CopyPanel[];
-  pastedPanels: CopyPanel[];
-  lastOperationType: 'cut' | 'paste' | null;
-}
-
 export interface CreatePanelState {
-  newPanelGrid: PanelCellTypeKey[][];
+  newPanelGrid: Cell[][];
 }
 
 export interface PanelPlacementMode {
@@ -64,10 +57,7 @@ export interface StudioModeStateInEditor {
 }
 
 export interface SolutionState {
-  /** サーバから返ってきた解の配列 */
   solutions: PanelPlacement[][];
-  /** 何通り目をプレビュー中か (-1 = 未選択) */
   currentIndex: number;
-  /** 現在の解をグリッドに投影した 2D 数字オーバレイ */
   numberGrid: NumberGrid;
 }

@@ -1,1 +1,0 @@
-export { findWolfPath } from './main';

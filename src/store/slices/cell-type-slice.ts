@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { GridCellKey } from "@/types/grid";
+import { CellKey } from "@/types/cell";
 import { CellTypeState } from "@/types/store/states";
 
 const initialState: CellTypeState = {
@@ -10,7 +10,7 @@ export const cellTypeSlice = createSlice({
   name: "cellType",
   initialState,
   reducers: {
-    changeCellType: (state, action: PayloadAction<GridCellKey>) => {
+    changeCellType: (state, action: PayloadAction<CellKey>) => {
       state.selectedCellType = action.payload;
     },
   },

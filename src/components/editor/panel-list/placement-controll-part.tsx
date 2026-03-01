@@ -1,50 +1,30 @@
 import { Button } from "@/components/ui/button";
 import { panelPlacementSlice } from "@/store/slices/panel-placement-slice";
 import { panelListSlice } from "@/store/slices/panel-list-slice";
-import { copyPanelListSlice } from "@/store/slices/copy-panel-list-slice";
 import { gridSlice } from "@/store/slices/grid-slice";
-import { studioModeInEditorSlice } from "@/store/slices/studio-mode-in-editor-slice";
 import { RootState } from "@/store";
 import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
-
-import { evaluateAllPaths, createCombinedNextGrid } from "@/logic";
-import { Result, resultMessages } from "@/types/path";
-import { StudioModeInEditor } from "@/types/store";
+// import { useState } from "react";
 
 // import { useToast } from "@/hooks/use-toast"
-import { toast } from "sonner";
+// import { toast } from "sonner";
 
 export const PlacementControllPart: React.FC = () => {
   const dispatch = useDispatch();
   const gridHistory = useSelector((state: RootState) => state.grid.gridHistory);
-  const phaseHistory = useSelector((state: RootState) => state.grid.phaseHistory);
-  const grid = useSelector((state: RootState) => state.grid.grid);
-  const lastOperationType = useSelector((state: RootState) => state.copyPanelList.lastOperationType);
-  
-  // クリア状態を管理するローカルstate
-  const [isCleared, setIsCleared] = useState<boolean>(false);
+  // const phaseHistory = useSelector((state: RootState) => state.grid.phaseHistory);
+  // const grid = useSelector((state: RootState) => state.grid.grid);
+
+  // const [isCleared, setIsCleared] = useState<boolean>(false);
 
   // const { toast } = useToast();
   
   // 「1つ戻す」メソッド
   const undoLastPlacement = () => {
-    if (lastOperationType === 'cut' || lastOperationType === 'paste') {
-      // Cut/Paste操作の場合
-      dispatch(copyPanelListSlice.actions.undo());
-      dispatch(panelListSlice.actions.undo());
-      dispatch(gridSlice.actions.undo());
+    // 通常パネルの場合
+    dispatch(panelListSlice.actions.undo());
+    dispatch(gridSlice.actions.undo());
 
-      if (lastOperationType === 'paste') {
-        dispatch(gridSlice.actions.undo()); // Paste後は2回グリッドアンドゥ
-      }
-    } else {
-      // 通常パネルの場合
-      dispatch(panelListSlice.actions.undo());
-      dispatch(gridSlice.actions.undo());
-    }
-
-    setIsCleared(false);
   };
 
   // 「リセット」メソッド
@@ -60,88 +40,7 @@ export const PlacementControllPart: React.FC = () => {
         highlightedCell: null,
       })
     );
-    setIsCleared(false);
   };
-
-  // 「フェーズリセット」メソッド
-  const resetPhase = () => {
-    // フェーズ履歴をリセット
-    dispatch(gridSlice.actions.resetPhase());
-
-    // グリッドとパネル配置履歴をリセット
-    dispatch(panelListSlice.actions.reset());
-    // グリッドの状態を初期化
-    dispatch(gridSlice.actions.initHistory());
-    // dispatch(gridSlice.actions.reset());
-
-    // パネル配置モードの終了
-    dispatch(
-      panelPlacementSlice.actions.selectPanelForPlacement({
-        panel: null,
-        highlightedCell: null,
-      })
-    );
-    setIsCleared(false);
-  };
-
-  // 「再生」メソッド
-  const playSimulation = async () => {
-      // StudioModeInEditorをPlayに切り替え
-      dispatch(studioModeInEditorSlice.actions.switchMode(StudioModeInEditor.Play));
-
-      const { startResult, wolfResults, finalResult } = evaluateAllPaths(grid, phaseHistory);
-      
-      // nextGridを決定（nullの場合は元のgridを使用）
-      const nextGrid = startResult.nextGrid !== null ? startResult.nextGrid : grid;
-      
-      // Wolf移動を統合
-      const combinedNextGrid = createCombinedNextGrid(startResult, wolfResults, nextGrid);
-      
-      // UI処理用にcombinedNextGridを持つPathResultを作成
-      const _pathResult = { 
-          ...startResult, 
-          nextGrid: combinedNextGrid
-      };
-
-      // 対応するResultMessageをポップアップ
-      if (finalResult === Result.WolfReachedGoal)
-          toast.error(resultMessages[finalResult]);
-      else if (_pathResult.result === Result.HasClearPath)
-          toast.success(resultMessages[_pathResult.result]);
-      else
-          toast.info(resultMessages[_pathResult.result]);
-      
-      // クリアした場合またはWolf失敗の場合は再生ボタンをdisable
-      if (_pathResult.result === Result.HasClearPath || finalResult === Result.WolfReachedGoal) {
-          setIsCleared(true);
-      }
-      
-      // クリアした場合、または休憩地点に着いた場合、または旗に到達した場合、またはWolf失敗の場合
-      if (_pathResult.result === Result.HasClearPath
-        || _pathResult.result === Result.HasRestPath 
-        || _pathResult.result === Result.HasFlagPath
-        || finalResult === Result.WolfReachedGoal){
-          // nullじゃない場合のみ配置
-          if (_pathResult.nextGrid !== null)
-              dispatch(gridSlice.actions.loadGrid(_pathResult.nextGrid));
-
-          // フェーズ履歴を保存
-          dispatch(gridSlice.actions.savePhaseHistory());
-
-          // Flag以外の場合は配置履歴を初期化する
-          if (_pathResult.result !== Result.HasFlagPath) {
-              dispatch(gridSlice.actions.initHistory());
-              dispatch(panelListSlice.actions.reset());
-          }
-      }
-
-      // // テスト
-      // dispatch(gridSlice.actions.savePhaseHistory());
-      // // グリッド配置履歴は初期化する
-      // dispatch(gridSlice.actions.initHistory());
-      // dispatch(panelListSlice.actions.reset());
-  };
-    
 
   return (
     <div className="flex gap-2 mb-10">
@@ -162,18 +61,10 @@ export const PlacementControllPart: React.FC = () => {
         リセット
       </Button>
       <Button
-        onClick={resetPhase}
-        disabled={phaseHistory.length < 2}
-        variant="secondary"
-        className="flex items-center gap-2 w-20 text-left"      
-      >
-        ⌛リセット
-      </Button>
-      <Button
-        onClick={playSimulation}
-        disabled={isCleared}
-        variant="destructive"
-        className="flex items-center gap-2 w-20 text-left"      
+        // onClick={playSimulation}
+        // disabled={isCleared}
+        // variant="destructive"
+        // className="flex items-center gap-2 w-20 text-left"      
       >
         再生
       </Button>
