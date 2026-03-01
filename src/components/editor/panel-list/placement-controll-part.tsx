@@ -4,8 +4,7 @@ import { panelListSlice } from "@/store/slices/panel-list-slice";
 import { gridSlice } from "@/store/slices/grid-slice";
 import { RootState } from "@/store";
 import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
-
+// import { useState } from "react";
 
 // import { useToast } from "@/hooks/use-toast"
 // import { toast } from "sonner";
@@ -13,11 +12,10 @@ import { useState } from "react";
 export const PlacementControllPart: React.FC = () => {
   const dispatch = useDispatch();
   const gridHistory = useSelector((state: RootState) => state.grid.gridHistory);
-  const phaseHistory = useSelector((state: RootState) => state.grid.phaseHistory);
+  // const phaseHistory = useSelector((state: RootState) => state.grid.phaseHistory);
   // const grid = useSelector((state: RootState) => state.grid.grid);
-  
-  // クリア状態を管理するローカルstate
-  const [isCleared, setIsCleared] = useState<boolean>(false);
+
+  // const [isCleared, setIsCleared] = useState<boolean>(false);
 
   // const { toast } = useToast();
   
@@ -27,7 +25,6 @@ export const PlacementControllPart: React.FC = () => {
     dispatch(panelListSlice.actions.undo());
     dispatch(gridSlice.actions.undo());
 
-    setIsCleared(false);
   };
 
   // 「リセット」メソッド
@@ -43,7 +40,6 @@ export const PlacementControllPart: React.FC = () => {
         highlightedCell: null,
       })
     );
-    setIsCleared(false);
   };
 
   return (

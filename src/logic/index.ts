@@ -8,8 +8,7 @@ export {
   findSingle,
   findAll,
   deepCopyGrid,
-  flipSide,
-  getNeighbors,
+getNeighbors,
   pointEquals,
   pointInArray
 } from './utils';

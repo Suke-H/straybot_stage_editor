@@ -10,7 +10,7 @@ export const inBounds = (point: Point, grid: Grid): boolean => {
 }
 
 export const isPassable = (cell: Cell): boolean => {
-  return cell.type !== 'Empty' && cell.type !== 'Black';
+  return cell.type !== 'Empty';
 }
 
 export const findSingle = (grid: Grid, key: CellKey): Point | null => {

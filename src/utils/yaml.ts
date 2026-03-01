@@ -1,8 +1,7 @@
 import { parse, stringify } from "yaml";
-import { Cell, CellKey, CELL_TYPES } from "@/types/cell";
+import { Cell, CellKey } from "@/types/cell";
 import { Panel } from "@/types/panel";
 import { Grid } from "@/types/grid";
-import { capitalize } from "./string-operations";
 
 interface CellYamlData {
   Type: string;
@@ -39,15 +38,11 @@ export const exportStageToYaml = (grid: Grid, panels: Panel[]): string => {
   const panelCoordinates = panels.map((panel) => {
     const baseData = { Type: panel.type || "Normal" };
 
-    if (panel.type === "Swap") {
-      return { ...baseData, Coordinates: [{ X: 0, Y: 0 }] };
-    }
-
     return {
       ...baseData,
       Coordinates: panel.cells.flatMap((row, y) =>
         row
-          .map((cell, x) => cell.type === "Black" ? { X: x, Y: panel.cells.length - 1 - y } : null)
+          .map((cell, x) => cell.type !== "Normal" ? { X: x, Y: panel.cells.length - 1 - y } : null)
           .filter((coord): coord is { X: number; Y: number } => coord !== null)
       ),
     };
@@ -70,16 +65,12 @@ export const importStageFromYaml = (yamlString: string): [Grid, Panel[]] => {
   );
 
   const panels: Panel[] = Panels.map((panel: PanelYamlData, index: number) => {
-    if (panel.Type === "Swap") {
-      return { id: `panel-${index}`, cells: [[{ type: "Swap" } as Cell]], type: "Swap" as Panel["type"] };
-    }
-
     const panelGrid: Cell[][] = Array.from({ length: Height }, () =>
       Array.from({ length: Width }, (): Cell => ({ type: "Normal" }))
     );
 
     panel.Coordinates?.forEach(({ X, Y }) => {
-      panelGrid[Height - 1 - Y][X] = { type: "Black" };
+      panelGrid[Height - 1 - Y][X] = { type: "Empty" };
     });
 
     return {
@@ -95,11 +86,9 @@ export const importStageFromYaml = (yamlString: string): [Grid, Panel[]] => {
 const trimPanels = (panels: Panel[]): Panel[] => panels.map(trimPanelCells);
 
 const trimPanelCells = (panel: Panel): Panel => {
-  if (panel.type === "Swap") return panel;
-
   const coordinates = panel.cells.flatMap((row, rowIndex) =>
     row
-      .map((cell, colIndex) => cell.type === "Black" ? { X: colIndex, Y: rowIndex } : null)
+      .map((cell, colIndex) => cell.type !== "Normal" ? { X: colIndex, Y: rowIndex } : null)
       .filter((c): c is { X: number; Y: number } => c !== null)
   );
 

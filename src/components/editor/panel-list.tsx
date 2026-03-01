@@ -29,7 +29,7 @@ export const PanelList: React.FC = () => {
     let hl = { row: 0, col: 0 };
     outer: for (let i = 0; i < panel.cells.length; i++)
       for (let j = 0; j < panel.cells[i].length; j++)
-        if ((panel.cells[i][j] as Cell).type === "Black") {
+        if ((panel.cells[i][j] as Cell).type !== "Normal") {
           hl = { row: i, col: j };
           break outer;
         }
