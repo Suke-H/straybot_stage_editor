@@ -75,7 +75,7 @@ export const importStageFromYaml = (yamlString: string): [Grid, Panel[]] => {
     }
 
     const panelGrid: Cell[][] = Array.from({ length: Height }, () =>
-      Array.from({ length: Width }, (): Cell => ({ type: "White" }))
+      Array.from({ length: Width }, (): Cell => ({ type: "Normal" }))
     );
 
     panel.Coordinates?.forEach(({ X, Y }) => {

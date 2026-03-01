@@ -4,7 +4,7 @@ import { Grid } from "@/types/grid";
 import { GridState } from "@/types/store/states";
 import { Path } from "@/types/path";
 
-const WHITE: Cell = { type: "White" };
+const WHITE: Cell = { type: "Normal" };
 
 const initialState: GridState = {
   grid: [

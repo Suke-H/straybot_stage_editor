@@ -7,10 +7,8 @@ export class NormalPanelStrategy implements IPanelStrategy {
   canPlace(grid: Grid, rowIdx: number, colIdx: number, panel: Panel): boolean {
     for (let i = 0; i < panel.cells.length; i++) {
       for (let j = 0; j < panel.cells[0].length; j++) {
-        if (panel.cells[i][j].type === "Black") {
-          if (grid[rowIdx + i][colIdx + j].type !== "White") {
-            return false;
-          }
+        if (grid[rowIdx + i][colIdx + j].type !== "Normal") {
+          return false;
         }
       }
     }
@@ -23,7 +21,7 @@ export class NormalPanelStrategy implements IPanelStrategy {
     for (let i = 0; i < panel.cells.length; i++) {
       for (let j = 0; j < panel.cells[0].length; j++) {
         const panelCell = panel.cells[i][j];
-        if (panelCell.type !== "White") {
+        if (panelCell.type !== "Normal") {
           newGrid[rowIdx + i][colIdx + j] = { ...panelCell };
         }
       }

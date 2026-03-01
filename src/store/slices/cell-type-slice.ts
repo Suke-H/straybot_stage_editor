@@ -3,7 +3,7 @@ import { CellKey } from "@/types/cell";
 import { CellTypeState } from "@/types/store/states";
 
 const initialState: CellTypeState = {
-  selectedCellType: "White",
+  selectedCellType: "Normal",
 };
 
 export const cellTypeSlice = createSlice({

@@ -6,17 +6,7 @@ const initialState: PanelListState = {
   panels: [
     {
       id: "panel1",
-      cells: [
-        [{ type: "Black" }, { type: "Black" }],
-        [{ type: "Black" }, { type: "Black" }],
-      ],
-    },
-    {
-      id: "panel2",
-      cells: [
-        [{ type: "Black" }, { type: "White" }],
-        [{ type: "White" }, { type: "Black" }],
-      ],
+      cells: [[{ type: "ArrowRight" }]],
     },
   ],
   removedPanels: [],
