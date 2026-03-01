@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { panelPlacementSlice } from "@/store/slices/panel-placement-slice";
 import { panelListSlice } from "@/store/slices/panel-list-slice";
-import { copyPanelListSlice } from "@/store/slices/copy-panel-list-slice";
 import { gridSlice } from "@/store/slices/grid-slice";
 import { RootState } from "@/store";
 import { useDispatch, useSelector } from "react-redux";
@@ -16,7 +15,6 @@ export const PlacementControllPart: React.FC = () => {
   const gridHistory = useSelector((state: RootState) => state.grid.gridHistory);
   const phaseHistory = useSelector((state: RootState) => state.grid.phaseHistory);
   // const grid = useSelector((state: RootState) => state.grid.grid);
-  const lastOperationType = useSelector((state: RootState) => state.copyPanelList.lastOperationType);
   
   // クリア状態を管理するローカルstate
   const [isCleared, setIsCleared] = useState<boolean>(false);
@@ -25,20 +23,9 @@ export const PlacementControllPart: React.FC = () => {
   
   // 「1つ戻す」メソッド
   const undoLastPlacement = () => {
-    if (lastOperationType === 'cut' || lastOperationType === 'paste') {
-      // Cut/Paste操作の場合
-      dispatch(copyPanelListSlice.actions.undo());
-      dispatch(panelListSlice.actions.undo());
-      dispatch(gridSlice.actions.undo());
-
-      if (lastOperationType === 'paste') {
-        dispatch(gridSlice.actions.undo()); // Paste後は2回グリッドアンドゥ
-      }
-    } else {
-      // 通常パネルの場合
-      dispatch(panelListSlice.actions.undo());
-      dispatch(gridSlice.actions.undo());
-    }
+    // 通常パネルの場合
+    dispatch(panelListSlice.actions.undo());
+    dispatch(gridSlice.actions.undo());
 
     setIsCleared(false);
   };

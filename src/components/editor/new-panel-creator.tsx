@@ -1,9 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Plus } from "lucide-react";
-import {
-  Panel,
-  PanelCellTypeKey,
-} from "@/types/panel";
+import { Cell } from "@/types/cell";
+import { Panel } from "@/types/panel";
 import { Button } from "@/components/ui/button";
 import { Add, Remove } from "@mui/icons-material";
 import { Switch } from "@/components/ui/switch";
@@ -19,14 +17,11 @@ export const NewPanelCreator: React.FC = () => {
   const dispatch = useDispatch();
 
   const newPanelGrid = useSelector(
-    (state: RootState): PanelCellTypeKey[][] => state.createPanel.newPanelGrid
+    (state: RootState): Cell[][] => state.createPanel.newPanelGrid
   );
 
-
-
-  /* 追加ボタン */
   const addPanel = () => {
-    const hasBlack = newPanelGrid.some((row) => row.includes("Black"));
+    const hasBlack = newPanelGrid.some((row) => row.some((c) => c.type === "Black"));
     if (!hasBlack) return;
 
     const newPanel: Panel = {
@@ -47,44 +42,25 @@ export const NewPanelCreator: React.FC = () => {
 
       <CardContent>
         <div className="flex flex-col gap-4">
-          {/* 行・列操作 */}
           <div className="grid grid-cols-2 gap-4 text-left">
-            {/* 行 */}
             <div>
               <span className="font-semibold ml-4">行</span>
               <div className="flex justify-center gap-2 mt-2">
-                <Button
-                  onClick={() => dispatch(createPanelSlice.actions.addToRow())}
-                  className="flex items-center justify-center w-10 h-10"
-                >
+                <Button onClick={() => dispatch(createPanelSlice.actions.addToRow())} className="flex items-center justify-center w-10 h-10">
                   <Add />
                 </Button>
-                <Button
-                  onClick={() =>
-                    dispatch(createPanelSlice.actions.removeFromRow())
-                  }
-                  className="flex items-center justify-center w-10 h-10"
-                >
+                <Button onClick={() => dispatch(createPanelSlice.actions.removeFromRow())} className="flex items-center justify-center w-10 h-10">
                   <Remove />
                 </Button>
               </div>
             </div>
-            {/* 列 */}
             <div>
               <span className="font-semibold ml-4">列</span>
               <div className="flex justify-center gap-2 mt-2">
-                <Button
-                  onClick={() => dispatch(createPanelSlice.actions.addToCol())}
-                  className="flex items-center justify-center w-10 h-10"
-                >
+                <Button onClick={() => dispatch(createPanelSlice.actions.addToCol())} className="flex items-center justify-center w-10 h-10">
                   <Add />
                 </Button>
-                <Button
-                  onClick={() =>
-                    dispatch(createPanelSlice.actions.removeFromCol())
-                  }
-                  className="flex items-center justify-center w-10 h-10"
-                >
+                <Button onClick={() => dispatch(createPanelSlice.actions.removeFromCol())} className="flex items-center justify-center w-10 h-10">
                   <Remove />
                 </Button>
               </div>
@@ -92,7 +68,6 @@ export const NewPanelCreator: React.FC = () => {
           </div>
         </div>
 
-        {/* パネルプレビュー */}
         <div
           className="grid mt-4 mb-4 ml-1"
           style={{
@@ -101,24 +76,13 @@ export const NewPanelCreator: React.FC = () => {
           }}
         >
           {newPanelGrid.map((row, rowIndex) =>
-            row.map((cellType, colIndex) => (
+            row.map((cell, colIndex) => (
               <div
                 key={`new-${rowIndex}-${colIndex}`}
                 className={`h-10 w-10 border ${
-                  cellType === "Black"
-                    ? "bg-gray-500"
-                    : cellType === "Cut"
-                    ? "bg-yellow-300"
-                    : "bg-white"
+                  cell.type === "Black" ? "bg-gray-500" : "bg-white"
                 }`}
-                onClick={() =>
-                  dispatch(
-                    createPanelSlice.actions.clickToCell({
-                      row: rowIndex,
-                      col: colIndex,
-                    })
-                  )
-                }
+                onClick={() => dispatch(createPanelSlice.actions.clickToCell({ row: rowIndex, col: colIndex }))}
               />
             ))
           )}
@@ -128,7 +92,6 @@ export const NewPanelCreator: React.FC = () => {
           <Plus size={16} /> パネル追加
         </Button>
 
-        {/* 切り取りモードトグル */}
         <div className="flex items-center gap-2 mt-4">
           <Switch checked={isCut} onCheckedChange={setIsCut} />
           <span>{isCut ? "切り取りモードON" : "切り取りモードOFF"}</span>
