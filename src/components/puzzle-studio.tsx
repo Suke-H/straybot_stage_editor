@@ -10,7 +10,6 @@ import { StudioMode } from "../types/store";
 
 import EditorPage from "@/components/editor-page";
 import PlayPage from "./play-page";
-import SolverPage from "./solver-page";
 import { decodeStageFromUrl } from '../utils/url';
 import { getYamlFromLocalStorage } from '../utils/local-storage';
 import { importStageFromYaml } from '../utils/yaml';
@@ -78,10 +77,6 @@ const PuzzleStudio: React.FC = () => {
 
         <TabsContent value="play">
           <PlayPage />
-        </TabsContent>
-
-        <TabsContent value="solver">
-          <SolverPage />
         </TabsContent>
 
       </Tabs>
