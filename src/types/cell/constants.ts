@@ -24,4 +24,10 @@ export const CELL_TYPES: Record<CellKey, CellDefinition> = {
   FootDown: { label: "足あと↓", color: "bg-gray-200", code: "fd", picture: "foot_down.png" },
   FootLeft: { label: "足あと←", color: "bg-gray-200", code: "fl", picture: "foot_left.png" },
   Flag: { label: "フラグ", color: "bg-gray-200", code: "f", picture: "flag.png" },
+  ArrowUp: { label: "矢印↑", color: "bg-gray-200", code: "au", picture: "arrow-up.png" },
+  ArrowRight: { label: "矢印→", color: "bg-gray-200", code: "ar", picture: "arrow-right.png" },
+  ArrowDown: { label: "矢印↓", color: "bg-gray-200", code: "ad", picture: "arrow-down.png" },
+  ArrowLeft: { label: "矢印←", color: "bg-gray-200", code: "al", picture: "arrow-left.png" },
+  Reverse: { label: "リバース", color: "bg-orange-400", code: "rv", picture: "reverse.png" },
+  Tele: { label: "テレポート", color: "bg-cyan-400", code: "tl", picture: "tele.png" },
 } as const;

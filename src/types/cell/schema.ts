@@ -15,5 +15,11 @@ export type CellKey =
   | "FootDown"
   | "FootLeft"
   | "Flag"
+  | "ArrowUp"
+  | "ArrowRight"
+  | "ArrowDown"
+  | "ArrowLeft"
+  | "Reverse"
+  | "Tele"
 
 export type Cell = { type: CellKey };

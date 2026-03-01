@@ -6,7 +6,6 @@ import studioModeInEditorReducer from "./slices/studio-mode-in-editor-slice";
 import cellTypeReducer from "./slices/cell-type-slice";
 import panelListReducer from "./slices/panel-list-slice";
 import panelPlacementReducer from "./slices/panel-placement-slice";
-import createPanelReducer from "./slices/create-panel-slice";
 import gridReducer from "./slices/grid-slice";
 import swapReducer from "./slices/swap-slice";
 
@@ -17,7 +16,6 @@ export const store = configureStore({
     cellType: cellTypeReducer,
     panelList: panelListReducer,
     panelPlacement: panelPlacementReducer,
-    createPanel: createPanelReducer,
     grid: gridReducer,
     swap: swapReducer,
   },

@@ -1,37 +1,24 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Plus } from "lucide-react";
-import { Cell } from "@/types/cell";
-import { Panel } from "@/types/panel";
-import { Button } from "@/components/ui/button";
-import { Add, Remove } from "@mui/icons-material";
-import { Switch } from "@/components/ui/switch";
-
-import { createPanelSlice } from "@/store/slices/create-panel-slice";
-import { panelListSlice } from "@/store/slices/panel-list-slice";
-import { RootState } from "@/store";
-import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-export const NewPanelCreator: React.FC = () => {
-  const [isCut, setIsCut] = useState<boolean>(false);
-  const dispatch = useDispatch();
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { panelListSlice } from "@/store/slices/panel-list-slice";
+import { RootState } from "@/store";
 
-  const newPanelGrid = useSelector(
-    (state: RootState): Cell[][] => state.createPanel.newPanelGrid
+export const NewPanelCreator: React.FC = () => {
+  const dispatch = useDispatch();
+  const selectedCellType = useSelector(
+    (state: RootState) => state.cellType.selectedCellType
   );
 
   const addPanel = () => {
-    const hasBlack = newPanelGrid.some((row) => row.some((c) => c.type === "Black"));
-    if (!hasBlack) return;
-
-    const newPanel: Panel = {
-      id: `panel-${Date.now()}`,
-      cells: newPanelGrid,
-      type: isCut ? "Cut" : "Normal",
-    };
-
-    dispatch(panelListSlice.actions.createPanel(newPanel));
-    dispatch(createPanelSlice.actions.initPanelGrid());
+    dispatch(
+      panelListSlice.actions.createPanel({
+        id: `panel-${Date.now()}`,
+        cells: [[{ type: selectedCellType }]],
+      })
+    );
   };
 
   return (
@@ -39,63 +26,14 @@ export const NewPanelCreator: React.FC = () => {
       <CardHeader>
         <CardTitle>パネル作成</CardTitle>
       </CardHeader>
-
       <CardContent>
-        <div className="flex flex-col gap-4">
-          <div className="grid grid-cols-2 gap-4 text-left">
-            <div>
-              <span className="font-semibold ml-4">行</span>
-              <div className="flex justify-center gap-2 mt-2">
-                <Button onClick={() => dispatch(createPanelSlice.actions.addToRow())} className="flex items-center justify-center w-10 h-10">
-                  <Add />
-                </Button>
-                <Button onClick={() => dispatch(createPanelSlice.actions.removeFromRow())} className="flex items-center justify-center w-10 h-10">
-                  <Remove />
-                </Button>
-              </div>
-            </div>
-            <div>
-              <span className="font-semibold ml-4">列</span>
-              <div className="flex justify-center gap-2 mt-2">
-                <Button onClick={() => dispatch(createPanelSlice.actions.addToCol())} className="flex items-center justify-center w-10 h-10">
-                  <Add />
-                </Button>
-                <Button onClick={() => dispatch(createPanelSlice.actions.removeFromCol())} className="flex items-center justify-center w-10 h-10">
-                  <Remove />
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div
-          className="grid mt-4 mb-4 ml-1"
-          style={{
-            gridTemplateColumns: `repeat(${newPanelGrid[0]?.length ?? 0}, 40px)`,
-            gap: "4px",
-          }}
+        <Button
+          onClick={addPanel}
+          disabled={selectedCellType === "Empty"}
+          className="w-10 h-10 p-0"
         >
-          {newPanelGrid.map((row, rowIndex) =>
-            row.map((cell, colIndex) => (
-              <div
-                key={`new-${rowIndex}-${colIndex}`}
-                className={`h-10 w-10 border ${
-                  cell.type === "Black" ? "bg-gray-500" : "bg-white"
-                }`}
-                onClick={() => dispatch(createPanelSlice.actions.clickToCell({ row: rowIndex, col: colIndex }))}
-              />
-            ))
-          )}
-        </div>
-
-        <Button onClick={addPanel} className="w-full flex items-center gap-2">
-          <Plus size={16} /> パネル追加
+          <Plus size={20} />
         </Button>
-
-        <div className="flex items-center gap-2 mt-4">
-          <Switch checked={isCut} onCheckedChange={setIsCut} />
-          <span>{isCut ? "切り取りモードON" : "切り取りモードOFF"}</span>
-        </div>
       </CardContent>
     </Card>
   );
