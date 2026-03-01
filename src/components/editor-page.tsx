@@ -12,6 +12,7 @@ import { CellTypeSelector } from "@/components/editor/cell-type-selector";
 import { GridViewer } from "@/components/editor/grid-viewer";
 import { PanelList } from "@/components/editor/panel-list";
 import { NewPanelCreator } from "@/components/editor/new-panel-creator";
+import { StartAndGoalSelector } from "@/components/editor/start-and-goal-selector";
 
 const EditorPage: React.FC = () => {
   const dispatch = useDispatch();
@@ -52,7 +53,10 @@ const EditorPage: React.FC = () => {
   return (
     <div className="flex flex-col gap-4 md:flex-row justify-start">
       <div className="flex gap-4">
-        <CellTypeSelector />
+        <div className="flex flex-col gap-4">
+          <StartAndGoalSelector />
+          <CellTypeSelector />
+        </div>
         <GridViewer />
       </div>
 

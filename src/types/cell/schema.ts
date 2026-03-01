@@ -1,8 +1,6 @@
 export type CellKey =
   | "Empty"
   | "Normal"
-  | "Start"
-  | "Goal"
   | "ArrowUp"
   | "ArrowRight"
   | "ArrowDown"

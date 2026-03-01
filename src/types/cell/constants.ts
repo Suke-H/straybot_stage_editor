@@ -10,8 +10,6 @@ export type CellDefinition = {
 export const CELL_TYPES: Record<CellKey, CellDefinition> = {
   Empty: { label: "空", color: "bg-white", code: "e", picture: "empty.png" },
   Normal: { label: "通常床", color: "bg-[#DAE0EA]", code: "n", picture: "white.png" },
-  Start: { label: "スタート", color: "bg-green-500", code: "st", picture: "start.png" },
-  Goal: { label: "ゴール", color: "bg-red-500", code: "g", picture: "goal.png" },
   ArrowUp: { label: "矢印↑", color: "bg-yellow-400", code: "au", picture: "arrow-up.png" },
   ArrowRight: { label: "矢印→", color: "bg-yellow-400", code: "ar", picture: "arrow-right.png" },
   ArrowDown: { label: "矢印↓", color: "bg-yellow-400", code: "ad", picture: "arrow-down.png" },

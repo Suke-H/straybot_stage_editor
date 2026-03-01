@@ -8,6 +8,7 @@ import panelListReducer from "./slices/panel-list-slice";
 import panelPlacementReducer from "./slices/panel-placement-slice";
 import gridReducer from "./slices/grid-slice";
 import swapReducer from "./slices/swap-slice";
+import startAndGoalReducer from "./slices/start-and-goal-slice";
 
 export const store = configureStore({
   reducer: {
@@ -18,6 +19,7 @@ export const store = configureStore({
     panelPlacement: panelPlacementReducer,
     grid: gridReducer,
     swap: swapReducer,
+    startAndGoal: startAndGoalReducer,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
 });

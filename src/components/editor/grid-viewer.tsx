@@ -5,6 +5,7 @@ import { gridSlice } from "@/store/slices/grid-slice";
 import { panelListSlice } from "@/store/slices/panel-list-slice";
 import { panelPlacementSlice } from "@/store/slices/panel-placement-slice";
 import { setSwapTarget, clearSwapTarget } from "@/store/slices/swap-slice";
+import { startAndGoalSlice } from "@/store/slices/start-and-goal-slice";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CellImage } from "@/components/ui/cell-image";
@@ -27,8 +28,14 @@ export const GridViewer: React.FC = () => {
   const selectedCellKey = useSelector((s: RootState) => s.cellType.selectedCellType) as CellKey;
   const placementMode   = useSelector((s: RootState) => s.panelPlacement.panelPlacementMode);
   const swapState       = useSelector((s: RootState) => s.swap);
+  const { startAndGoal, selectingTarget } = useSelector((s: RootState) => s.startAndGoal);
 
   const handleGridCellClick = (rowIdx: number, colIdx: number): void => {
+    if (selectingTarget !== null) {
+      dispatch(startAndGoalSlice.actions.setPosition({ target: selectingTarget, y: rowIdx, x: colIdx }));
+      return;
+    }
+
     const placing = placementMode.panel as Panel | null;
 
     if (studioMode === StudioMode.Editor && !placing) {
@@ -81,6 +88,8 @@ export const GridViewer: React.FC = () => {
 
   const renderCell = (cell: Cell, r: number, c: number) => {
     const isSwapTarget = swapState.swapTarget?.row === r && swapState.swapTarget?.col === c;
+    const isStart = startAndGoal.start?.y === r && startAndGoal.start?.x === c;
+    const isGoal  = startAndGoal.goal?.y  === r && startAndGoal.goal?.x  === c;
 
     return (
       <div
@@ -91,6 +100,16 @@ export const GridViewer: React.FC = () => {
         onClick={() => handleGridCellClick(r, c)}
       >
         {cell.type !== "Empty" && <CellImage cell={cell} />}
+        {isStart && (
+          <div className="absolute inset-0 pointer-events-none">
+            <img src="/cells/start.png" alt="start" className="w-full h-full object-contain" />
+          </div>
+        )}
+        {isGoal && (
+          <div className="absolute inset-0 pointer-events-none">
+            <img src="/cells/goal.png" alt="goal" className="w-full h-full object-contain" />
+          </div>
+        )}
       </div>
     );
   };
